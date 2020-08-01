@@ -75,6 +75,28 @@ class DDSketch {
       this.collapseBins();
     }
   }
+
+  subtract(other) {
+    if (this.alpha !== other.alpha) {
+      throw new Error('Alpha values must be the same to subtract two sketches');
+    }
+
+    Object.keys(other.bins).forEach((i) => {
+      if (this.bins[i]) {
+        let count = other.bins[i];
+        this.bins[i] -= count;
+        this.n -= count;
+
+        if (this.n < 0) {
+          this.n = 0;
+        }
+
+        if (this.bins[i] <= 0) {
+          delete this.bins[i];
+        }
+      }
+    });
+  }
 }
 
 module.exports = { DDSketch };
